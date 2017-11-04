@@ -1,0 +1,18 @@
+banyak orang
+kecepatan tiap orang
+2 tempat bagian
+1 jembatan yang bisa memuat 2 orang
+
+banyak orang yang ada di kanan
+
+class orang
+	kecepatan
+
+class tempat
+	array/list of orang
+
+class jembatan
+	array[2] orang
+
+class handler
+	class yang mengatur semua algoritma
