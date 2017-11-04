@@ -1,4 +1,4 @@
-# Tgs_psc1
+# Tugas PSC 1
 Algoritma Genetika Bridge Problem
 
 Bridge problem adalah sebuah masalah dimana terdapat segelintir orang yang ingin menyebrangi jurang hanya dengan jembatan yang 
