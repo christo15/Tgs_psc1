@@ -4,18 +4,17 @@
  */
 public class Orang {
 
-    private int speed;
-    private String name;
+    public final int speed;
+    public String name;
     
-    
+    public Orang(int input){
+        speed=input;
+    }
 
     public int getSpeed() {
         return this.speed;
     }
 
-    public void setSpeed(int newSpeed) {
-        this.speed = newSpeed;
-    }
 
     public String getName() {
         return this.name;

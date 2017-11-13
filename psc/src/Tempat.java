@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 
 /*
@@ -15,6 +14,10 @@ public class Tempat {
     
     ArrayList<Orang>people;
     
+    public Tempat(){
+        people=new ArrayList<Orang>();
+    }
+    
     public Tempat(Orang[] input){
         people=new ArrayList<Orang>();
         for(int i=0;i<input.length;i++){
@@ -23,10 +26,8 @@ public class Tempat {
     }
     
     public Orang pindah(int index){
-        Orang res=new Orang();
-        res=people.get(index);
-        people.remove(index);
-        return res;
+        Orang res=people.get(index);
+        return people.remove(index);
     }
     
     public void sampai(Orang input){
