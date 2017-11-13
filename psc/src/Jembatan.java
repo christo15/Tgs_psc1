@@ -3,17 +3,14 @@
  * @author i14039
  */
 public class Jembatan {
-    private Orang[] orang;
     
-    public Jembatan(Orang orang1, Orang orang2){
-        orang = new Orang[2];
-        orang[0] = orang1;
-        orang[1] = orang2;
+    public int sebrang1 (Orang x){
+        return x.getSpeed();
     }
     
-    public int getSpeed(){
-        int speed1 = orang[0].getSpeed();
-        int speed2 = orang[1].getSpeed();
+    public int sebrang2(Orang x,Orang y){
+        int speed1 = x.getSpeed();
+        int speed2 = y.getSpeed();
         if(speed1 > speed2){
             return speed1;
         } else {
