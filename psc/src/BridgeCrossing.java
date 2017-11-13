@@ -14,11 +14,10 @@ import java.util.Comparator;
  * @author RickyWahyudi
  */
 public class BridgeCrossing {
-
+    public Tempat nyebrang;
     public Tempat kiri;
     public Tempat kanan;
     public String kromosom;
-    public Jembatan cross;
     public int jumlah;
 
     public BridgeCrossing(int input) {
@@ -30,13 +29,33 @@ public class BridgeCrossing {
         
         kiri = new Tempat(ppl);
         kanan = new Tempat();
-        cross = new Jembatan();
         this.sort(kiri);
+        nyebrang=new Tempat();
     }
 
     public void sort(Tempat input) {
         Collections.sort(input.people, (p1, p2) -> p1.getSpeed() - p2.getSpeed());
 
+    }
+    
+    public int indexTerlambat(Tempat input){
+        int index=0;
+        for (int i = 1; i < input.people.size(); i++) {
+            if(input.people.get(index).speed<input.people.get(i).speed){
+                index=i;
+            }
+        }
+        return index;
+    }
+    
+    public int indexTercepat(Tempat input){
+        int index=0;
+        for (int i = 1; i < kanan.people.size(); i++) {
+            if(kanan.people.get(index).speed>kanan.people.get(i).speed){
+                index=i;
+            }
+        }
+        return index;
     }
     
     public void soutPpl(){
@@ -51,25 +70,30 @@ public class BridgeCrossing {
         String res = "";
         while (kanan.people.size()!=jumlah) {
             if (kiri.people.size() == 2) {
-                int nilaiPergi = cross.sebrang2(kiri.people.get(0), kiri.people.get(1));
-                kanan.people.add(kiri.pindah(1));
-                kanan.people.add(kiri.pindah(0));
+                nyebrang.people.add(kiri.pindah(0));
+                nyebrang.people.add(kiri.pindah(0));
+                int terlambat=nyebrang.people.get(this.indexTerlambat(nyebrang)).speed;
+                kanan.people.add(nyebrang.pindah(0));
+                kanan.people.add(nyebrang.pindah(0));
                 this.sort(kanan);
-                res=res+nilaiPergi;
+                res=res+terlambat;
             } else {
                 int index1 = Math.abs((int) (Math.random() * kiri.people.size())-1);
                 int index2 =  Math.abs((int) (Math.random() * kiri.people.size())-1);
                 while (index2 == index1) {
                     index2 =  Math.abs((int) (Math.random() * kiri.people.size())-1);
                 }
-                int nilaiPergi = cross.sebrang2(kiri.people.get(index1), kiri.people.get(index2));
-                kanan.people.add(kiri.pindah(index1));
-                kanan.people.add(kiri.pindah(index2));
-                this.sort(kanan);
-                res+=nilaiPergi+";";
-                res+=kanan.people.get(0).speed+";";
-                //nilaiPergi+=kanan.people.get(0).speed;
-                kiri.people.add(kanan.pindah(0));
+                
+                nyebrang.people.add(kiri.pindah(index1));
+                nyebrang.people.add(kiri.pindah(index2));
+                int terlambat=nyebrang.people.get(this.indexTerlambat(nyebrang)).speed;
+                kanan.people.add(nyebrang.pindah(0));
+                kanan.people.add(nyebrang.pindah(0));
+                res+=terlambat+";";
+                int iT=this.indexTercepat(kanan);
+                res+=kanan.people.get(iT).getSpeed()+";";
+                //nilaiPergi+=kanan.people.get(iT).speed;
+                kiri.people.add(kanan.pindah(iT));
                 
                 
             }
