@@ -10,17 +10,12 @@
  */
 public class GeneticAlgorithm {
 
-    public BridgeCrossing[] bc;
     public String[] kromosom;
 
     public GeneticAlgorithm(int input) {
-        bc = new BridgeCrossing[input];
-        kromosom = new String[input];
-        int banyak = (int) (Math.random() * 6 + 4);
-        for (int i = 0; i < bc.length; i++) {
-            bc[i] = new BridgeCrossing(banyak);
-            kromosom[i] = bc[i].solve();
-        }
+        
+        
+        
     }
     
     public void soutKromosom(){
@@ -30,11 +25,15 @@ public class GeneticAlgorithm {
     }
     
     public static void main(String[] args){
-        //GeneticAlgorithm ga=new GeneticAlgorithm(10);
-        //ga.soutKromosom();
+        GeneticAlgorithm ga=new GeneticAlgorithm(10);
+        
         BridgeCrossing bc = new BridgeCrossing(5);
         bc.soutPpl();
         System.out.println(bc.solve());
+        ga.kromosom=bc.kromosom.split(";");
+        for(int i=0;i<ga.kromosom.length;i++){
+            System.out.println(ga.kromosom[i]);
+        }
     }
 
 }
