@@ -17,6 +17,7 @@ public class BridgeCrossing {
     public Tempat nyebrang;
     public Tempat kiri;
     public Tempat kanan;
+    public Tempat templateKiri[];
     public String kromosom;
     public int jumlah;
 
@@ -28,6 +29,10 @@ public class BridgeCrossing {
         }
         
         kiri = new Tempat(ppl);
+        templateKiri = new Tempat[7];
+        for(int i=0;i<7;i++){
+            templateKiri[i] = new Tempat(ppl);
+        }
         kanan = new Tempat();
         this.sort(kiri);
         nyebrang=new Tempat();
@@ -68,30 +73,51 @@ public class BridgeCrossing {
         int index = 0;
         int temp = Integer.MAX_VALUE;
         for(int i=index;i<input.people.size();i++){
-            if(input.people.get(i).speed - mean < temp){
-                index = i;
-                temp = input.people.get(i).speed - mean;
+            if(mean > input.people.get(i).getSpeed())
+                if(mean - input.people.get(i).speed < temp){
+                    index = i;
+                    temp = input.people.get(i).speed - mean;
+                } else {
+                    
+                }
+            else {
+                if(input.people.get(i).speed - mean < temp){
+                    index = i;
+                    temp = input.people.get(i).speed - mean;
+                }
             }
         }
         return index;
     }
     
     public int indexQ1(Tempat input){
-        int q1 = 0;
-        q1 = (1/4)*(input.people.size()+1);
-        return q1;
+        double q1 = 0;
+        q1 = (1.0/4)*(input.people.size()+1);
+        int res = (int) Math.floor(q1);
+        if(res!=0){
+            res= res-1;
+        }
+        return res;
     }
     
     public int indexQ2(Tempat input){
-        int q2 = 0;
-        q2 = (2/4)*(input.people.size()+1);
-        return q2;
+        double q2 = 0;
+        q2 = (2.0/4)*(input.people.size()+1);
+        int res = (int) Math.floor(q2);
+        if(res!=0){
+            res= res-1;
+        }
+        return res;
     }
     
     public int indexQ3(Tempat input){
-        int q3 = 0;
-        q3 = (3/4)*(input.people.size()+1);
-        return q3;
+        double q3 = 0;
+        q3 = (3.0/4)*(input.people.size()+1);
+        int res = (int) Math.floor(q3);
+        if(res!=0){
+            res= res-1;
+        }
+        return res;
     }
     
     public void soutPpl(){
@@ -130,26 +156,39 @@ public class BridgeCrossing {
                 res += kanan.people.get(kanan.people.size()-1).getSpeed();
             }
         } 
+        if(input < res){
+            res -= input;
+        } else {
+            res = input - res;
+        }
         return res;
     }
     
     public String solve() {
         String res = "";
+        int hasil = 0;
+        int ii = -1;
+        int jj = -1;
+        int nilaiFiti = Integer.MAX_VALUE;
+        int nilaiFitj = Integer.MAX_VALUE;
         int populasi[][] = new int[6][4];
         for(int i=0;i<6;i++){
             for(int j=0;j<4;j++){
                 if(j==3){
                     populasi[i][j] = -1;
+                } else if(j==2){
+                    populasi[i][j] = 1;
                 } else {
                     populasi[i][j] = Math.abs((int) (Math.random() * 6)+1);
                 }
             }
         }
         int i = 0;
-        while (kanan.people.size()!=jumlah) {
+        while (i<6) {
             int krom1 = populasi[i][0];
             int krom2 = populasi[i][1];
             int krom3 = populasi[i][2];
+            System.out.println(populasi[i][0]+" "+populasi[i][1]+" "+populasi[i][2]);
             if (kiri.people.size() == 2) {
                 nyebrang.people.add(kiri.pindah(0));
                 nyebrang.people.add(kiri.pindah(0));
@@ -158,58 +197,89 @@ public class BridgeCrossing {
                 kanan.people.add(nyebrang.pindah(0));
                 this.sort(kanan);
                 res=res+terlambat;
+                String temp[] = res.split(";");
+                for(int j=0;j<temp.length-1;j++){;
+                    hasil += Integer.parseInt(temp[j]);
+                }
+                populasi[i][3] = hasil;
+                int fit = fitness(hasil);
+                if(fit < nilaiFiti){
+                    int temp1 = 0;
+                    int temp2 = -1;
+                    temp1 = nilaiFiti;
+                    temp2 = ii;
+                    nilaiFiti = fit;
+                    ii = i;
+                    if(temp1 < nilaiFitj){
+                        nilaiFitj = temp1;
+                        jj = temp2;
+                    }
+                } else {
+                    if(fit < nilaiFitj){
+                        nilaiFitj = fit;
+                        jj = i;
+                    }
+                }
+                System.out.println(res+" "+populasi[i][3]);
+                i++;
+                kanan = new Tempat();
+                kiri = templateKiri[i];
+                nyebrang = new Tempat();
+                res = "";
+                hasil = 0;
             } else {
                 int a = 0;
                 int b = 0;
                 int c = 0;
                 if(krom1==1){
-                    a = indexTercepat(kanan);
+                    a = indexTercepat(kiri);
                 } else if(krom1==2){
-                    a = indexTerlambat(kanan);
+                    a = indexTerlambat(kiri);
                 } else if(krom1==3){
-                    a = mendekatiMean(kanan);
+                    a = mendekatiMean(kiri);
                 } else if(krom1==4){
-                    a = indexQ1(kanan);
+                    a = indexQ1(kiri);
                 } else if(krom1==5){
-                    a = indexQ2(kanan);
+                    a = indexQ2(kiri);
                 } else {
-                    a = indexQ3(kanan);
-                }
-                
-                if(krom2==1){
-                    b = indexTercepat(kanan);
-                } else if(krom2==2){
-                    b = indexTerlambat(kanan);
-                } else if(krom2==3){
-                    b = mendekatiMean(kanan);
-                } else if(krom2==4){
-                    b = indexQ1(kanan);
-                } else if(krom2==5){
-                    b = indexQ2(kanan);
-                } else {
-                    b = indexQ3(kanan);
-                }
-                
-                if(krom3==1){
-                    c = indexTercepat(kiri);
-                } else if(krom3==2){
-                    c = indexTerlambat(kiri);
-                } else if(krom3==3){
-                    c = mendekatiMean(kiri);
-                } else if(krom3==4){
-                    c = indexQ1(kiri);
-                } else if(krom3==5){
-                    c = indexQ2(kiri);
-                } else {
-                    c = indexQ3(kiri);
+                    a = indexQ3(kiri);
                 }
                 nyebrang.people.add(kiri.pindah(a));
+                
+                if(krom2==1){
+                    b = indexTercepat(kiri);
+                } else if(krom2==2){
+                    b = indexTerlambat(kiri);
+                } else if(krom2==3){
+                    b = mendekatiMean(kiri);
+                } else if(krom2==4){
+                    b = indexQ1(kiri);
+                } else if(krom2==5){
+                    b = indexQ2(kiri);
+                } else {
+                    b = indexQ3(kiri);
+                }
                 nyebrang.people.add(kiri.pindah(b));
                 int terlambat = nyebrang.people.get(this.indexTerlambat(nyebrang)).speed;
                 kanan.people.add(nyebrang.pindah(0));
                 kanan.people.add(nyebrang.pindah(0));
                 res+=terlambat+";";
+                
+                if(krom3==1){
+                    c = indexTercepat(kanan);
+                } else if(krom3==2){
+                    c = indexTerlambat(kanan);
+                } else if(krom3==3){
+                    c = mendekatiMean(kanan);
+                } else if(krom3==4){
+                    c = indexQ1(kanan);
+                } else if(krom3==5){
+                    c = indexQ2(kanan);
+                } else {
+                    c = indexQ3(kanan);
+                }
                 res+=kanan.people.get(c).getSpeed()+";";
+                
                 kiri.people.add(kanan.pindah(c));
                 /**
                 nyebrang.people.add(kiri.pindah(index1));
@@ -231,6 +301,19 @@ public class BridgeCrossing {
             }
             
         }
-        return res + " " + populasi[0][0] + " " + populasi[0][1] + " " + populasi[0][2];
+        //return res + " " + populasi[0][0] + " " + populasi[0][1] + " " + populasi[0][2] + " " + hasil;
+        int rand = Math.abs((int) (Math.random() * 3));
+        int rand2 = Math.abs((int) (Math.random() * 2));
+        int[] newPopulasi = new int[4];
+        if(rand2==0){
+            newPopulasi = populasi[ii];
+            newPopulasi[rand] = populasi[jj][rand];
+        } else {
+            newPopulasi = populasi[jj];
+            newPopulasi[rand] = populasi[ii][rand];
+        }
+        
+        
+        return ii+"   "+jj+" "+populasi[ii][0]+" "+populasi[ii][1]+" "+populasi[ii][2]+" "+populasi[ii][3]+" "+"|"+populasi[jj][0]+" "+populasi[jj][1]+" "+populasi[jj][2]+" "+populasi[jj][3]+" | "+newPopulasi[0]+" "+newPopulasi[1]+" "+newPopulasi[2];
     }
 }
